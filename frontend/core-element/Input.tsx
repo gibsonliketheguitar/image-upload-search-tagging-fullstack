@@ -9,8 +9,9 @@ type T_Input = {
   id: string;
   placeholder?: string;
   type?: string;
-  onChange: (...args: any) => void;
+  sx?: string | '';
   value: string;
+  onChange: (...args: any) => void;
 };
 
 export default function Input(props: T_Input) {
@@ -24,12 +25,13 @@ export default function Input(props: T_Input) {
     onChange,
     type = "text",
     value,
+    sx = '',
   } = props;
 
   //TODO figure out why input stylingis not updating?
   const inputStyle = inputClassName
     ? inputClassName
-    : "border h-10 w-52 leading-4 py-4 px-3 pounded text-white rounded shadow-md";
+    : "input-base";
 
   return (
     <div>
@@ -39,7 +41,7 @@ export default function Input(props: T_Input) {
         htmlFor={htmlFor}
       />
       <input
-        className={inputStyle}
+        className={inputStyle + ' ' + sx}
         type={type}
         id={id}
         defaultValue={defaultValue}
