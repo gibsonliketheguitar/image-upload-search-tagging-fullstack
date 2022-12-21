@@ -109,3 +109,24 @@ a {
     color-scheme: dark;
   }
 }
+
+@layer components {
+  .btn-base {
+    @apply m-2 px-2 py-1.5 rounded-sm;
+  }
+
+  .btn-tablet {
+  }
+
+  .btn-default {
+    @apply bg-cyan-500 text-white;
+  }
+
+  .btn-outlined {
+    @apply border border-2 border-cyan-500 shadow-none rounded-sm text-cyan-500;
+  }
+
+  .btn-text {
+    @apply shadow-none text-white;
+  }
+}
