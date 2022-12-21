@@ -4,23 +4,22 @@
 
 @layer components {
   .btn-base {
-    @apply m-2 px-2 py-1.5 rounded-sm;
+    @apply m-2 px-2 py-1.5 rounded-md;
   }  
   .btn-default {
-    @apply bg-cyan-500 text-white;
+    @apply bg-primary text-white rounded-sm;
   }
 
   .btn-outlined {
-    @apply border border-2 border-cyan-500 shadow-none rounded-sm text-cyan-500;
+    @apply border border-2 border-secondary shadow-none rounded-lg text-secondary;
   }
 
   .btn-text {
-    @apply shadow-none text-white;
+    @apply shadow-none text-black;
   }
 
   .input-base {
-    @apply border-2 border-cyan-500 h-10 w-52 py-4 px-3 text-black rounded-md shadow-md
+    @apply border-2 border-secondary focus:outline-primary h-10 w-52 py-4 px-3 text-black rounded-md shadow-md
+    
   }
-
-
 }
