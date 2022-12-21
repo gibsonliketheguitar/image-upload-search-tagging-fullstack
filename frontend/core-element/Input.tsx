@@ -1,6 +1,6 @@
 import * as Label from "@radix-ui/react-label";
 
-type T_Input = {
+export type T_Input = {
   defaultValue?: string;
   hidden?: boolean;
   htmlFor: string;
@@ -10,8 +10,8 @@ type T_Input = {
   placeholder?: string;
   type?: string;
   sx?: string | '';
-  value: string;
-  onChange: (...args: any) => void;
+  value?: string;
+  onChange?: (...args: any) => void;
 };
 
 export default function Input(props: T_Input) {
@@ -34,7 +34,7 @@ export default function Input(props: T_Input) {
     : "input-base";
 
   return (
-    <div>
+    <div className="">
       <Label.Root
         hidden={hidden}
         className={labelClassName}

@@ -11,8 +11,6 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [images, setImages] = useState<T_ImageCard[] | []>([]);
 
-  const handleUpload = () => { };
-
   const handleResetSearch = () => {
     setSearch("");
   };

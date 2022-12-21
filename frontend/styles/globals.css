@@ -19,7 +19,10 @@
   }
 
   .input-base {
-    @apply border-2 border-secondary focus:outline-primary h-10 w-52 py-4 px-3 text-black rounded-md shadow-md
-    
+    @apply m-2 h-10 py-4 px-3 border-2 border-secondary focus:outline-primary text-black rounded-md shadow-md    
+  }
+
+  .input-field {
+    @apply box-border
   }
 }
