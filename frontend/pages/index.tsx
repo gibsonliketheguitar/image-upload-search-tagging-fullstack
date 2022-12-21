@@ -5,13 +5,13 @@ import Button from "core-element/Button";
 import { T_ImageCard } from "core-element/ImageCard";
 import ImageList from "core-element/ImageList";
 import { default as Search } from "core-element/Input";
-import Modal from "@core/Modal";
+import UploadImgButton from "@component/UploadImgButton";
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [images, setImages] = useState<T_ImageCard[] | []>([]);
 
-  const handleUpload = () => {};
+  const handleUpload = () => { };
 
   const handleResetSearch = () => {
     setSearch("");
@@ -38,6 +38,7 @@ export default function Home() {
             placeholder={"Search for images by title or tags"}
             value={search}
             onChange={handleSearchChange}
+            sx={'rounded-md'}
           />
           {/** TODO add icon to clear search field */}
           {search.length > 3 && (
@@ -46,11 +47,10 @@ export default function Home() {
               variant="default"
               title="Reset Search"
               onClick={handleResetSearch}
-              sx={"mr-4"}
+              sx={"mr-2"}
             />
           )}
-
-          <Button variant="outlined" title="Upload Image"></Button>
+          <UploadImgButton />
         </div>
         <ImageList data={images} />
       </main>
