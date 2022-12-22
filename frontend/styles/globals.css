@@ -5,7 +5,7 @@
 @layer components {
   .btn-base {
     @apply m-2 px-2 py-1.5 rounded-md;
-  }  
+  }
   .btn-default {
     @apply bg-primary text-white rounded-sm;
   }
@@ -19,10 +19,14 @@
   }
 
   .input-base {
-    @apply m-2 h-10 py-4 px-3 border-2 border-secondary focus:outline-primary text-black rounded-md shadow-md    
+    @apply m-2 h-10 py-4 px-3 border-2 border-secondary focus:outline-primary text-black rounded-md shadow-md;
+  }
+
+  .input-label-base {
+    @apply mx-2;
   }
 
   .input-field {
-    @apply box-border
+    @apply box-border;
   }
 }
