@@ -77,7 +77,7 @@ export default function UploadImgButton() {
               accept="image/*"
               onChange={handleFileUpload}
             />
-            <InputTags state={tag} setState={setTag} />
+            <InputTags className='m-2 pt-4 pb-12' state={tag} setState={setTag} />
 
             <Button
               key="submit"

@@ -30,3 +30,53 @@
     @apply box-border;
   }
 }
+
+.react-tags {
+  position: relative;
+  padding: 6px 0 0 6px;
+  border: 1px solid #D1D1D1;
+  border-radius: 1px;
+
+  /* shared font styles */
+  font-size: 1em;
+  line-height: 1.2;
+
+  /* clicking anywhere will focus the input */
+  cursor: text;
+}
+
+.react-tags__label {
+  display: block;
+}
+
+.react-tags__list {
+  display: inline; 
+  flex-wrap: wrap;
+}
+
+.react-tags__list-item {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 2px 2px;
+}
+
+.react-tags__list-item:first-child {
+  padding-left: 0px;
+}
+
+.react-tags__combobox {
+  display: inline;
+  margin: 0 2px;
+  padding: 2px 4px;
+}
+
+.react-tags__search {
+  display: inline-block;
+
+  /* match tag layout */
+  padding: 7px 2px;
+  margin-bottom: 6px;
+
+  /* prevent autoresize overflowing the container */
+  max-width: 100%;
+}
