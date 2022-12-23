@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Button from "core-element/Button";
 import { T_ImageCard } from "core-element/ImageCard";
@@ -9,7 +9,7 @@ import UploadImgButton from "@component/UploadImgButton";
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [images, setImages] = useState<T_ImageCard[] | []>([]);
+  const [images, setImages] = useState<any>([]);
 
   const handleResetSearch = () => {
     setSearch("");
@@ -18,7 +18,28 @@ export default function Home() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //TODO ADD RATE LIMITITE
     setSearch(e.target.value);
-  };
+  }
+  async function searchImage() {
+    const param = search.trim().split(' ').join('&')
+    const BASE_URL = 'https:localhost8000'
+    const query = '?search=' + param
+
+    try {
+      const response = await fetch(BASE_URL + query)
+    }
+    catch (error) {
+      console.log('failed to find image')
+    }
+  }
+  //Next Step
+
+
+
+
+
+  useEffect(() => {
+    console.log(images)
+  }, [images])
 
   return (
     <>
@@ -48,7 +69,7 @@ export default function Home() {
               sx={"mr-2"}
             />
           )}
-          <UploadImgButton />
+          <UploadImgButton setImages={setImages} />
         </div>
         <ImageList data={images} />
       </main>
