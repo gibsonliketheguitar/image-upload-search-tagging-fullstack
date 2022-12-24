@@ -58,7 +58,7 @@ export default function UploadImgButton() {
     try {
       const upload = await uploadS3(data.img)
       const save = await saveRecord({
-        ...data,
+        title: data.title,
         s3Key: upload.key,
         tags,
       })
@@ -67,7 +67,6 @@ export default function UploadImgButton() {
     catch (error) {
       console.log(error)
     }
-
 
     wait().then(() => setOpen(false));
   };

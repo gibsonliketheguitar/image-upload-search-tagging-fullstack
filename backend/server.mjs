@@ -1,4 +1,5 @@
 import express from "express";
+import db from './db/index.mjs'
 const app = express();
 
 import bodyParser from "body-parser";
@@ -12,15 +13,26 @@ app.use(compression()); // Compress all routes
 app.use(cors());
 app.use(helmet());
 
-app.get("/", (req, res) => {
-  //Get specific photo
-  const { id } = req.query;
+app.get("/", async (req, res) => {
+  console.log('what is db', db)
   res.status(200).send({ message: "hello world" });
 });
 
-app.put("/photo", (req, res) => {
-  //update specific photo
-  console.log('what is body', req.body)
+app.put("/photo", async (req, res) => {
+  const { title: imgTitle, s3Key, tags } = req.body
+  const client = await db()
+  await client.connect()
+  await client.query(`INSERT INTO "images" (title, s3Key) VALUES (${imgTitle},${s3Key.slice(0, -4)})`)
+
+  const TAGS = tags.split(',')
+  const INSERT_TAGS = []
+
+  for (const tagTitle of TAGS) {
+    INSERT_TAGS.push(`('${tagTitle}')`)
+  }
+
+  await client.query(`INSERT INTO "tags" (title) VALUES ${INSERT_TAGS.join(',')}`)
+
   res.status(200).send({ message: 'hi' })
 });
 
