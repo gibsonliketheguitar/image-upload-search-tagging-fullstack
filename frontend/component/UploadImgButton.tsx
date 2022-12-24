@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Trigger,
   Root,
@@ -8,11 +8,9 @@ import {
   Title,
   Overlay,
 } from "@radix-ui/react-dialog";
-import Button from "@core/Button";
 
-import { useState } from "react";
+import Button from "@core/Button";
 import Form from "@core/Form";
-import Input from "@core/Input";
 import RHF_Input from "@core/RHF_Input";
 import InputTags from "@component/InputTags";
 
@@ -30,12 +28,20 @@ export default function UploadImgButton() {
   }
 
   const uploadS3 = async (file: any) => {
+    console.log('what is file', file)
     const { uploadURL, key } = await getSignedUrl()
     //TODO figure out how to use wild card to capture all type of picture or enforce png only
-    const blobData = new Blob([new Uint8Array(file)], { type: file[0].type })
-    const result = await fetch(uploadURL, { method: 'PUT', body: blobData })
+    //TODO figure how to use new BLob
+    //const blobData = new Blob([new Uint8Array(file)], { type: 'image/png' })
+    const result = await fetch(uploadURL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'images/png'
+      },
+      body: file
+      //body: blobData
+    })
     if (!result.ok) throw new Error('Failed to upload image')
-
     return { key }
   }
 
@@ -54,15 +60,18 @@ export default function UploadImgButton() {
   }
 
   const handleSubmit = async (data: any) => {
-    const tags = tag.map((ele: any) => ele.value).join(",");
+    const userTags = tag.map((ele: any) => ele.value).join(",");
     try {
-      const upload = await uploadS3(data.img)
+      const upload = await uploadS3(data.img[0])
+      const genTags = await fetch('http://localhost:8000/tags?key=' + upload.key)
+      const { tags: moreTags } = await genTags.json()
       const save = await saveRecord({
         title: data.title,
         s3Key: upload.key,
-        tags,
+        tags: userTags.concat(',', moreTags),
+
       })
-      console.log(save)
+      console.log(upload, save)
     }
     catch (error) {
       console.log(error)

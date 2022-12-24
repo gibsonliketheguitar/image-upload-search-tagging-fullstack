@@ -1,5 +1,8 @@
 import express from "express";
+
 import db from './db/index.mjs'
+import createTags from "./service/createTags.js";
+
 const app = express();
 
 import bodyParser from "body-parser";
@@ -14,15 +17,28 @@ app.use(cors());
 app.use(helmet());
 
 app.get("/", async (req, res) => {
-  console.log('what is db', db)
   res.status(200).send({ message: "hello world" });
 });
+
+app.get("/tags", async (req, res) => {
+  const { result } = await createTags(req.query.key)
+
+  let resTag = ''
+  result.tags.forEach((ele, idx) => {
+    if (idx === 0) resTag = ele.tag.en
+    else resTag = resTag.concat(',', ele.tag.en)
+  })
+
+  res.status(200).send({ tags: resTag });
+});
+
+
 
 app.put("/photo", async (req, res) => {
   const { title: imgTitle, s3Key, tags } = req.body
   const client = await db()
   await client.connect()
-  await client.query(`INSERT INTO "images" (title, s3Key) VALUES (${imgTitle},${s3Key.slice(0, -4)})`)
+  await client.query(`INSERT INTO "images" (title, s3Key) VALUES ('${imgTitle}','${s3Key}')`)
 
   const TAGS = tags.split(',')
   const INSERT_TAGS = []
@@ -33,7 +49,11 @@ app.put("/photo", async (req, res) => {
 
   await client.query(`INSERT INTO "tags" (title) VALUES ${INSERT_TAGS.join(',')}`)
 
-  res.status(200).send({ message: 'hi' })
+  await client.query(`Select title From "tags"`, (err, res) => {
+    console.log(res)
+    client.end()
+  })
+  res.status(200)
 });
 
 app.get("/photo", (req, res) => {
