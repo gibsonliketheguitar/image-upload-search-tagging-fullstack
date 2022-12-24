@@ -1,10 +1,13 @@
 import express from "express";
 const app = express();
 
+import bodyParser from "body-parser";
 import compression from "compression";
 import cors from "cors";
 import helmet from "helmet";
 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 app.use(compression()); // Compress all routes
 app.use(cors());
 app.use(helmet());
@@ -15,9 +18,10 @@ app.get("/", (req, res) => {
   res.status(200).send({ message: "hello world" });
 });
 
-app.post("/photo", (req, res) => {
+app.put("/photo", (req, res) => {
   //update specific photo
-  const { id } = req.query;
+  console.log('what is body', req.body)
+  res.status(200).send({ message: 'hi' })
 });
 
 app.get("/photo", (req, res) => {
