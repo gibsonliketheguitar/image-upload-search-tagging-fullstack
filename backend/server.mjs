@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 import express from "express";
 
 import db from './db/index.mjs'
@@ -21,8 +24,8 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/tags", async (req, res) => {
-  const { result } = await createTags(req.query.key)
-
+  const { key } = req.query
+  const { result } = await createTags(key)
   let resTag = ''
   result.tags.forEach((ele, idx) => {
     if (idx === 0) resTag = ele.tag.en
@@ -31,8 +34,6 @@ app.get("/tags", async (req, res) => {
 
   res.status(200).send({ tags: resTag });
 });
-
-
 
 app.put("/photo", async (req, res) => {
   const { title: imgTitle, s3Key, tags } = req.body
@@ -50,10 +51,9 @@ app.put("/photo", async (req, res) => {
   await client.query(`INSERT INTO "tags" (title) VALUES ${INSERT_TAGS.join(',')}`)
 
   await client.query(`Select title From "tags"`, (err, res) => {
-    console.log(res)
     client.end()
   })
-  res.status(200)
+  res.status(200).send({ message: 'image created' })
 });
 
 app.get("/photo", (req, res) => {

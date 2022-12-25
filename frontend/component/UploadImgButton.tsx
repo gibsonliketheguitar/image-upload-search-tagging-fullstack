@@ -22,13 +22,12 @@ export default function UploadImgButton() {
   const [tag, setTag] = useState([]);
 
   const getSignedUrl = async () => {
-    const url = 'https://2mziu1ezol.execute-api.us-west-1.amazonaws.com/v1/getSignedUrl'
+    const url = process.env.NEXT_PUBLIC_AWS_SIGNED_URL as string
     const response = await fetch(url)
     return await response.json()
   }
 
   const uploadS3 = async (file: any) => {
-    console.log('what is file', file)
     const { uploadURL, key } = await getSignedUrl()
     //TODO figure out how to use wild card to capture all type of picture or enforce png only
     //TODO figure how to use new BLob
@@ -46,7 +45,9 @@ export default function UploadImgButton() {
   }
 
   const saveRecord = async (payload: any) => {
-    const URL = 'http://localhost:8000'
+    const URL = process.env.NODE_ENV === 'development'
+      ? process.env.NEXT_PUBLIC_DEV_URL
+      : process.env.NEXT_PUBLIC_PROD_SERVER
     const query = '/photo'
 
     const response = await fetch(URL + query, {
@@ -62,16 +63,25 @@ export default function UploadImgButton() {
   const handleSubmit = async (data: any) => {
     const userTags = tag.map((ele: any) => ele.value).join(",");
     try {
+      const URL = process.env.NODE_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_DEV_URL
+        : process.env.NEXT_PUBLIC_PROD_SERVER
+      //upload image to s3
       const upload = await uploadS3(data.img[0])
-      const genTags = await fetch('http://localhost:8000/tags?key=' + upload.key)
+      const query = '/tags?key=' + upload.key
+
+      //generate tag with s3 image path
+      const genTags = await fetch(URL + query)
       const { tags: moreTags } = await genTags.json()
+
+      //save final record
       const save = await saveRecord({
         title: data.title,
         s3Key: upload.key,
         tags: userTags.concat(',', moreTags),
 
       })
-      console.log(upload, save)
+      console.log('end', upload, save)
     }
     catch (error) {
       console.log(error)
