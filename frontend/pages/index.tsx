@@ -7,9 +7,24 @@ import ImageList from "core-element/ImageList";
 import { default as Search } from "core-element/Input";
 import UploadImgButton from "@component/UploadImgButton";
 
+const genImages = () => {
+  const res: any = []
+  for (let i = 0; i < 20; i++) {
+    res.push({
+      imgURL: `https://picsum.photos/seed/200/400`,
+      title: 'test' + i,
+      tags: 'test' + i,
+    })
+  }
+
+  return res
+}
+
+const dummyData = genImages()
+
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [images, setImages] = useState<T_ImageCard[] | []>([]);
+  const [images, setImages] = useState<T_ImageCard[] | []>(dummyData);
 
   const handleResetSearch = () => {
     setSearch("");
