@@ -35,6 +35,10 @@ export default function Home() {
     setSearch(e.target.value);
   };
 
+  const filteredImages = images.filter((ele: any) => {
+    if (ele.title.includes(search) || ele.tags.includes(search)) return ele
+  })
+
   return (
     <>
       <Head>
@@ -65,7 +69,7 @@ export default function Home() {
           )}
           <UploadImgButton />
         </div>
-        <ImageList data={images} />
+        <ImageList data={filteredImages} />
       </main>
     </>
   );
