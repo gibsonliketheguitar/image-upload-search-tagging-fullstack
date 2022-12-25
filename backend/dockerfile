@@ -1,0 +1,18 @@
+# syntax=docker/dockerfile:1
+# Container setup--------
+FROM node:18-alpine     
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+COPY ["package.json", "yarn-lock.json*", "./"]
+
+RUN yarn install --production
+#----------------------
+
+#Have our image, now to add our source into image
+COPY . . 
+
+CMD ["node", "server.mjs"]
+
+EXPOSE 8000
