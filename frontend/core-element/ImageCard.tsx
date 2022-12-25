@@ -1,13 +1,11 @@
 import Image from "next/image";
 
 export type T_ImageCard = {
-  src: string;
+  imgURL: string;
   title: string;
   width?: number;
   height?: number;
-  borderRadius?: number;
   style?: object;
-  margin?: number;
 };
 
 /**
@@ -16,26 +14,20 @@ export type T_ImageCard = {
 
 export default function ImageCard(props: T_ImageCard) {
   const {
-    src,
+    imgURL,
     title,
     width = 40,
     height = 60,
-    borderRadius = 3,
-    margin = 2,
     style,
   } = props;
   return (
     <Image
-      src={src}
+      fill={false}
+      src={imgURL}
       alt={title + " " + "image"}
-      width={width * 4}
-      height={height * 4}
-      style={{
-        borderRadius: `${borderRadius * 4}px`,
-        objectFit: "cover",
-        margin: `${margin * 4}px`,
-        ...style,
-      }}
+      width={300}
+      height={200}
+      className='rounded-lg'
     />
-  );
+  )
 }
