@@ -20,6 +20,15 @@ app.use(cors());
 app.use(helmet());
 
 app.get("/", async (req, res) => {
+  console.log('Server Login')
+  const client = await db()
+  client.connect().then(() => {
+    client.query('SELECT * FROM image', (err, res) => {
+      console.log(res)
+      client.end()
+    });
+  });
+
   res.status(200).send({ message: "hello world" });
 });
 
@@ -39,7 +48,7 @@ app.put("/photo", async (req, res) => {
   const { title: imgTitle, s3Key, tags } = req.body
   const client = await db()
   await client.connect()
-  await client.query(`INSERT INTO "images" (title, s3Key) VALUES ('${imgTitle}','${s3Key}')`)
+  await client.query(`INSERT INTO image (title, s3Key) VALUES ('${imgTitle}','${s3Key}')`)
 
   const TAGS = tags.split(',')
   const INSERT_TAGS = []
@@ -48,38 +57,13 @@ app.put("/photo", async (req, res) => {
     INSERT_TAGS.push(`('${tagTitle}')`)
   }
 
-  await client.query(`INSERT INTO "tags" (title) VALUES ${INSERT_TAGS.join(',')}`)
+  await client.query(`INSERT INTO tag (title) VALUES ${INSERT_TAGS.join(',')}`)
 
-  await client.query(`Select title From "tags"`, (err, res) => {
+  await client.query(`Select title FROM tag`, (err, res) => {
     client.end()
   })
   res.status(200).send({ message: 'image created' })
 });
-
-app.get("/photo", (req, res) => {
-  //Get specific photo
-  const { id } = req.query;
-});
-
-app.put("/photo", (req, res) => {
-  //Get specific photo
-  const { id } = req.query;
-});
-
-app.delete("/photo", (req, res) => {
-  //Delete specific photo
-  const { id } = req.query;
-});
-
-app.get("/photos", async (req, res) => {
-  //GET ALL Compress thumbnails
-});
-
-app.delete("/photos", async (req, res) => {
-  //DELETE all photos
-});
-
-//TODO configure client and server HTTP post
 
 //listen for request on port 8000, and as a callback function have the port listened on logged//TODO FIX deployment port
 const PORT = process.env.PORT || 8000;

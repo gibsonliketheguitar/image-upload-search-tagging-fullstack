@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: postgres_db
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./backend/db/postgres-data:/var/lib/postgresql/data # copy the sql script to create tables
+      - ./backend/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=images
+      - POSTGRES_PASSWORD=9359
+      - POSTGRES_USER=postgres
+
+  backend:
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+    links:
+      - database:images
+
+  nextjs:
+    depends_on:
+      - backend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./frontend/.env.local
+    ports:
+      - 3000:3000

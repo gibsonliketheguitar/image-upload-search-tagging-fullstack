@@ -21,3 +21,10 @@ yarn-error.log*
 # local env files
 .env*
 !.env.example
+
+# docker db 
+/db/*
+!/db/Dockerfile
+!/db/index.mjs
+!/db/initDB.sql
+!/db/docker-entrypoint-initdb
