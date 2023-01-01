@@ -37,7 +37,9 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "component/SearchPhoto/.view.tsx",
+    "component/SearchPhoto/.useFetchImg.tsx"
   ],
   "exclude": [
     "node_modules"

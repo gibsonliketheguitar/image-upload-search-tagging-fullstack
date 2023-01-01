@@ -1,7 +1,7 @@
 CREATE TABLE image (
     id serial primary key,
     s3key text,
-    title text
+    title text,
 );
 
 CREATE TABLE tag (

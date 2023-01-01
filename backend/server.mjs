@@ -32,14 +32,35 @@ app.get("/", async (req, res) => {
   res.status(200).send({ message: "hello world" });
 });
 
+/**
+ *  search by tags only
+ */
+
+app.get('/photos', async (req, res) => {
+  const { search } = await req.query
+  console.log('check search', search)
+  try {
+    const words = search.split(',')
+    console.log('what is words', words)
+    const result = await client.query(`SELECT * From tag`)
+    console.log('what is result', result)
+    res.status(200).send({ data: JSON.stringify(res) })
+  } catch (error) {
+    res.status(400).send({ errors: 'Search failed' })
+  }
+})
+
 app.get("/tags", async (req, res) => {
   const { key } = req.query
   const { result } = await createTags(key)
   let resTag = ''
-  result.tags.forEach((ele, idx) => {
-    if (idx === 0) resTag = ele.tag.en
-    else resTag = resTag.concat(',', ele.tag.en)
-  })
+
+  for (let i = 0; i <= 10; i++) {
+    const tag = result.tags[i].tag.en
+    resTag = i === 0
+      ? tag
+      : ',' + tag
+  }
 
   res.status(200).send({ tags: resTag });
 });
@@ -47,8 +68,11 @@ app.get("/tags", async (req, res) => {
 app.put("/photo", async (req, res) => {
   const { title: imgTitle, s3Key, tags } = req.body
   const client = await db()
+  const imageId = null
   await client.connect()
-  await client.query(`INSERT INTO image (title, s3Key) VALUES ('${imgTitle}','${s3Key}')`)
+  await client.query(`INSERT INTO image (title, s3Key) VALUES ('${imgTitle}','${s3Key}')`, (res, err) => {
+    console.log('what is res', res)
+  })
 
   const TAGS = tags.split(',')
   const INSERT_TAGS = []
@@ -59,8 +83,9 @@ app.put("/photo", async (req, res) => {
 
   await client.query(`INSERT INTO tag (title) VALUES ${INSERT_TAGS.join(',')}`)
 
-  await client.query(`Select title FROM tag`, (err, res) => {
-    client.end()
+
+  await client.query(`Select id FROM tag`, (err, res) => {
+
   })
   res.status(200).send({ message: 'image created' })
 });

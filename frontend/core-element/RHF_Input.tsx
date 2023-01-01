@@ -9,18 +9,16 @@ type T_RHF_Input = T_Input & {
 
 export default function RHF_Input(props: T_RHF_Input) {
   const {
-    accept,
     defaultValue,
     htmlFor,
     label = "",
     labelClassName,
     inputClassName,
     id,
-    onChange,
     register,
     type = "text",
     sx = "",
-    value,
+    ...rest
   } = props;
 
   //TODO figure out why input stylingis not updating?
@@ -37,14 +35,12 @@ export default function RHF_Input(props: T_RHF_Input) {
         {label}
       </Label.Root>
       <input
-        accept={accept}
         className={inputStyle + " " + sx}
         type={type}
         id={id}
         defaultValue={defaultValue}
-        onChange={onChange}
-        value={value}
         {...register(id)}
+        {...rest}
       />
     </>
   );

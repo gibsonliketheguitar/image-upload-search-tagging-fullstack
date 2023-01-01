@@ -1,11 +1,12 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import Button from "core-element/Button";
 import { T_ImageCard } from "core-element/ImageCard";
 import ImageList from "core-element/ImageList";
-import { default as Search } from "core-element/Input";
 import UploadImgButton from "@component/UploadImgButton";
+import { SearchPhoto } from "@component/SearchPhoto";
+import { searchPhoto } from "@component/SearchPhoto/api";
+import useDebounce from "@component/SearchPhoto/hook";
 
 const genImages = () => {
   const res: any = []
@@ -16,28 +17,38 @@ const genImages = () => {
       tags: 'test' + i,
     })
   }
-
   return res
 }
 
 const dummyData = genImages()
 
 export default function Home() {
-  const [search, setSearch] = useState("");
   const [images, setImages] = useState<T_ImageCard[] | []>(dummyData);
+  const [search, setSearch] = useState<string>("");
+  const debounceSearch = useDebounce(search, 1000)
+
+  useEffect(() => {
+    async function getData() {
+      const formatQuery = debounceSearch.trim().split(/[ ,]+/).join(',')
+      let { data, error } = await searchPhoto(formatQuery)
+      if (error) throw new Error(error.message)
+      else {
+        console.log(data)
+      }
+    }
+
+    if (debounceSearch.length >= 3) {
+      getData().catch(err => console.error(err))
+    }
+  }, [debounceSearch])
 
   const handleResetSearch = () => {
     setSearch("");
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //TODO ADD RATE LIMITITE
     setSearch(e.target.value);
   };
-
-  const filteredImages = images.filter((ele: any) => {
-    if (ele.title.includes(search) || ele.tags.includes(search)) return ele
-  })
 
   return (
     <>
@@ -49,27 +60,14 @@ export default function Home() {
       </Head>
       <main className="flex flex-col justify-center items-center">
         <div className="flex flex-row items-center">
-          <Search
-            id="search"
-            htmlFor="Input"
-            placeholder={"Search for images by title or tags"}
+          <SearchPhoto
             value={search}
             onChange={handleSearchChange}
-            sx={'rounded-md'}
+            reset={handleResetSearch}
           />
-          {/** TODO add icon to clear search field */}
-          {search.length > 3 && (
-            <Button
-              disabled={search.length < 3}
-              variant="default"
-              title="Reset Search"
-              onClick={handleResetSearch}
-              sx={"mr-2"}
-            />
-          )}
           <UploadImgButton />
         </div>
-        <ImageList data={filteredImages} />
+        <ImageList data={images} />
       </main>
     </>
   );
